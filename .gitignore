@@ -1,0 +1,22 @@
+# Java Bytecode and Outputs
+*.class
+*.jar
+*.war
+*.ear
+bin/
+build/
+target/
+out/
+
+# IDE and Editor Directories
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# OS Artifacts
+.DS_Store
+Thumbs.db
+Desktop.ini
