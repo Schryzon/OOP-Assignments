@@ -27,6 +27,21 @@ OOP-Assignments/
 │   ├── Advanced_Mathematics.java
 │   ├── Math_Demo.java
 │   └── README.md
+├── 06/
+│   ├── Flight_Control_Contract.java
+│   ├── Weapon_Platform.java
+│   ├── Sublimation_Capable.java
+│   ├── Autonomous_UAV.java
+│   ├── Corporate_Faction.java
+│   ├── Combat_Aircraft.java
+│   ├── Delphinus_Series.java
+│   ├── Night_Raven.java
+│   ├── XR900_Geopelia.java
+│   ├── Su43_Berkut.java
+│   ├── Coffin_Operator.java
+│   ├── Corporate_Air_Fleet.java
+│   ├── Electrosphere_Demo.java
+│   └── README.md
 └── README.md
 ```
 
@@ -45,6 +60,13 @@ OOP-Assignments/
 - **Run-Time Polymorphism**: Dynamic late binding and virtual method table (vtable) dispatch across heterogeneous shape arrays (`Shape_Demo.java`).
 - **Compile-Time Polymorphism (Overloading)**: Multi-arity and multi-type arithmetic calculation kernels (`Mathematics.java`, `Advanced_Mathematics.java`, `Math_Demo.java`).
 - Detailed documentation: [05/README.md](05/README.md)
+
+### Module 06: Full System Integration (Ace Combat 3 Electrosphere)
+- **Abstract Base & Interface Contracts**: Behavioral flight, multi-signature weapons, consciousness sublimation, and unmanned UAV contracts (`Flight_Control_Contract.java`, `Weapon_Platform.java`, `Sublimation_Capable.java`, `Autonomous_UAV.java`, `Combat_Aircraft.java`).
+- **Specialized Airframe Subtypes**: Neucom laminar aerodynes (`Delphinus_Series.java`), X-49 Sublimation superweapon (`Night_Raven.java`), autonomous AI drone (`XR900_Geopelia.java`), and General Resource heavy fighters (`Su43_Berkut.java`).
+- **Neural Association & Fleet Aggregation**: COFFIN neural pilot links (`Coffin_Operator.java`) and dual-storage fleet depots (`Corporate_Air_Fleet.java`).
+- **Simulation Console**: Automated benchmarks and interactive COFFIN mission CLI (`Electrosphere_Demo.java`).
+- Detailed documentation: [06/README.md](06/README.md)
 
 ---
 
@@ -66,8 +88,11 @@ java -cp 04 Country_Capital
 # Run ArrayList Dynamic Action Harness
 java -cp 04 Bank_Account_Array_In_Action
 
-# Run Core Banking Domain Harness
+# Run Core Banking Domain Harness (Automated)
 java -cp 04 Bank_Demo
+
+# Run Interactive ATM Console
+java -cp 04 Bank_Demo -i
 ```
 
 Compile and execute Module 05:
@@ -75,9 +100,24 @@ Compile and execute Module 05:
 # Compile
 javac 05/*.java
 
-# Run Geometric Inheritance & Polymorphism Demo
+# Run Geometric Inheritance & Polymorphism Demo (Automated)
 java -cp 05 Shape_Demo
+
+# Run Interactive Shape Calculator
+java -cp 05 Shape_Demo -i
 
 # Run Arithmetic Method Overloading Demo
 java -cp 05 Math_Demo
+```
+
+Compile and execute Module 06:
+```powershell
+# Compile
+javac 06/*.java
+
+# Run Automated Electrosphere Simulation Benchmark
+java -cp 06 Electrosphere_Demo
+
+# Run Interactive COFFIN Mission Console
+java -cp 06 Electrosphere_Demo -i
 ```
