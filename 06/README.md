@@ -23,14 +23,10 @@ This module represents a complete capstone synthesis integrating the full contin
 | `Coffin_Operator.java` | Entity Class | Object Association (Has-A link to `Combat_Aircraft`), ENSI neural sync |
 | `Corporate_Air_Fleet.java` | Aggregation Class | Fixed array (`Combat_Aircraft[]`) + dynamic collection (`ArrayList<Combat_Aircraft>`) |
 | `Electrosphere_Demo.java` | Simulation Driver | Dr. Simon Orestes Cohen testbed; automated telemetry + interactive CLI (`-i`) |
-| `class_diagram.puml` | PlantUML Spec | Formal UML class specification source code |
-| `class_diagram.png` | Exported Diagram | Rendered high-resolution UML architectural diagram |
 
 ---
 
 ## Class Diagram
-
-![Ace Combat 3 Electrosphere Class Diagram](class_diagram.png)
 
 ```mermaid
 classDiagram
