@@ -23,10 +23,14 @@ This module represents a complete capstone synthesis integrating the full contin
 | `Coffin_Operator.java` | Entity Class | Object Association (Has-A link to `Combat_Aircraft`), ENSI neural sync |
 | `Corporate_Air_Fleet.java` | Aggregation Class | Fixed array (`Combat_Aircraft[]`) + dynamic collection (`ArrayList<Combat_Aircraft>`) |
 | `Electrosphere_Demo.java` | Simulation Driver | Dr. Simon Orestes Cohen testbed; automated telemetry + interactive CLI (`-i`) |
+| `class_diagram.puml` | PlantUML Spec | Formal UML class specification source code |
+| `class_diagram.png` | Exported Diagram | Rendered high-resolution UML architectural diagram |
 
 ---
 
-## Architecture & Class Diagram
+## Class Diagram
+
+![Ace Combat 3 Electrosphere Class Diagram](class_diagram.png)
 
 ```mermaid
 classDiagram
@@ -60,6 +64,14 @@ classDiagram
         +execute_evasive_pattern() void
     }
 
+    class Corporate_Faction {
+        <<enumeration>>
+        GENERAL_RESOURCE
+        NEUCOM_INC
+        UPEO_SARF
+        OUROBOROS
+    }
+
     class Combat_Aircraft {
         <<abstract>>
         #String model_name
@@ -84,6 +96,68 @@ classDiagram
     Coffin_Operator o-- Combat_Aircraft : Has-A Association
     Corporate_Air_Fleet *-- Combat_Aircraft : Aggregation
 ```
+
+---
+
+## Architectural Explanation of the Class Diagram
+
+The UML class diagram models the multi-tier engineering architecture of the 2040 corporate aerial warfare system. It partitions responsibilities into four distinct design tiers:
+
+### 1. Interface Layer (Behavioral Contracts and Capabilities)
+The interfaces at the top of the hierarchy specify what entities can do without dictating how they do it:
+- **`Flight_Control_Contract`**: Declares avionics flight dynamics methods (`execute_maneuver`, `set_thrust`, `get_current_speed`). Any implementing system must conform to these aerodynamic standards, decoupling flight controllers from physical hardware.
+- **`Weapon_Platform`**: Declares offensive firing operations. It demonstrates **Compile-Time Method Overloading** at the interface level with three distinct signatures:
+  1. `fire_weapon()`: Standard pulse laser / machine gun burst.
+  2. `fire_weapon(int salvo_count)`: Multi-missile salvo discharge.
+  3. `fire_weapon(String target_id, double lock_frequency)`: Long-range radar-guided missile tracking.
+- **`Sublimation_Capable`**: A specialized capability contract modeling Dr. Yoko Martha Inoue's consciousness upload protocol (`upload_consciousness`, `is_sublimated`, `get_neural_sync_ratio`). Only aircraft wired for direct brainstem or cyberspace integration implement this contract.
+- **`Autonomous_UAV`**: A specialized capability contract for unmanned aerial systems (`engage_ai_autopilot`, `execute_evasive_pattern`, `is_unmanned`). It isolates AI combat flight logic from human pilot dependencies.
+
+### 2. Abstract Base Layer (`Combat_Aircraft`)
+The abstract class `Combat_Aircraft` serves as the core foundation for all flyable airframes:
+- **Interface Realization (`..|>`)**: It realizes both `Flight_Control_Contract` and `Weapon_Platform`. This guarantees that every aircraft possesses unified flight dynamics and multi-mode weapon delivery.
+- **State Encapsulation**: Shared physical properties (`model_name`, `faction`, `armor_integrity`, `current_speed`, `max_speed`, `payload_count`) are declared as `protected` fields. They are inherited directly by all subclasses, eliminating code duplication while remaining shielded from unauthorized external packages.
+- **Class Invariant Protection**: Concrete methods in the abstract base enforce strict physical boundary rules:
+  - `set_thrust()` clamps throttle percentages to $[0.0, 100.0]$, ensuring speed never exceeds `max_speed` or drops below zero.
+  - `execute_maneuver()` validates G-force limits, inflicting airframe damage if structural thresholds ($12\text{G}$) are exceeded.
+  - `take_damage()` guarantees non-negative damage and clamps minimum armor integrity to $0.0\%$.
+  - `fire_weapon()` methods check ammunition reserves before discharge, returning `false` if the payload is exhausted.
+- **Abstract Template Hooks**: Methods marked with `*` (`calculate_radar_cross_section()`, `deploy_countermeasures()`, `render_tactical_hud()`) lack base implementations. They mandate that each derived aircraft type provide specialized polymorphic behavior.
+
+### 3. Concrete Aircraft Hierarchy (Inheritance and Specialization)
+Four specialized aircraft extend `Combat_Aircraft` (`--|>`), forming a rich inheritance and capability matrix:
+- **`Delphinus_Series` (Neucom Inc.)**:
+  - Implements the R-101/R-102/R-103 laminar aerodyne line.
+  - Introduces a private `laminar_flow_coefficient` field.
+  - Overrides `execute_maneuver()` to take advantage of Neucom's advanced COFFIN G-dampening (withstanding up to $14\text{G}$ without airframe stress).
+  - Overrides `deploy_countermeasures()` with electronic aero-shield dispersion and `calculate_radar_cross_section()` with low-observable carbon-composite calculations.
+- **`Night_Raven` (General Resource / Ouroboros)**:
+  - Models the legendary X-49 giant flying wing experimental superweapon.
+  - Employs **Multiple Interface Implementation**: Inherits from `Combat_Aircraft` and implements `Sublimation_Capable`.
+  - Introduces Aeon particle laser cannon mechanics (`laser_cannon_charge_mw`, `fire_laser_cannon()`).
+  - Implements digital dead-copy consciousness binding (`upload_consciousness()`) to represent Dision's or Rena's presence in cyberspace.
+- **`XR900_Geopelia` (Neucom Inc. / Gepetto Project)**:
+  - Neucom's unmanned production superplane developed from defected Night Raven engineers.
+  - Employs **Multiple Interface Implementation**: Inherits from `Combat_Aircraft` and implements `Autonomous_UAV`.
+  - Omission of human pilot accommodations allows execution of super-maneuvers ($20\text{G}$ split-S turns) via `execute_evasive_pattern()` without physiological risk.
+- **`Su43_Berkut` (General Resource)**:
+  - Heavy forward-swept wing multi-role fighter equipped with COFFIN generation 2 opto-neuron arrays.
+  - Adds thrust-vectoring canard control (`canards_vectoring`, `set_canards_vectoring()`) and heavy magnesium flare / dual-band chaff countermeasures.
+
+### 4. Association and Aggregation Layer
+The system models realistic relationships between pilots, aircraft, and corporate command structures:
+- **Object Association (`Coffin_Operator` $\rightarrow$ `Combat_Aircraft`)**:
+  - Modeled as a **Has-A association** with multiplicity $0..1$.
+  - A pilot (`Coffin_Operator`) exists independently of any aircraft.
+  - The method `assign_aircraft()` establishes the runtime link, and `sync_neural_link()` verifies that the pilot's `neuro_compatibility_index` meets the minimum threshold ($0.40$) for ENSI connection.
+- **Fleet Aggregation (`Corporate_Air_Fleet` $\rightarrow$ `Combat_Aircraft`)**:
+  - Modeled as a **Whole-Part aggregation** (`*--`) with multiplicity $0..*$.
+  - The fleet manages two complementary storage architectures:
+    1. A fixed-size array (`Combat_Aircraft[] ready_hangar`) representing launch-ready flight decks with $O(1)$ indexed access.
+    2. A dynamic list (`ArrayList<Combat_Aircraft> reserve_reinforcements`) representing depot reserves that expand dynamically during sorties.
+  - `scramble_fleet_sorties()` demonstrates **Runtime Dynamic Dispatch (Late Binding / vtable)** by iterating across the array and invoking overridden methods on heterogeneous aircraft types with zero `if-else` branching.
+- **Domain Enumeration (`Corporate_Faction`)**:
+  - Establishes strict type safety for political and corporate alignment (`GENERAL_RESOURCE`, `NEUCOM_INC`, `UPEO_SARF`, `OUROBOROS`), preventing arbitrary invalid strings across airframes, pilots, and fleets.
 
 ---
 

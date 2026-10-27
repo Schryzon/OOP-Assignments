@@ -1,0 +1,169 @@
+@startuml
+skinparam dpi 300
+skinparam monochrome false
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam backgroundColor #FFFFFF
+skinparam roundcorner 8
+
+skinparam class {
+    BackgroundColor #F8F9FA
+    ArrowColor #212529
+    BorderColor #343A40
+}
+
+enum Corporate_Faction <<enumeration>> {
+    + GENERAL_RESOURCE
+    + NEUCOM_INC
+    + UPEO_SARF
+    + OUROBOROS
+}
+
+interface Flight_Control_Contract {
+    + execute_maneuver(g_force: double): boolean
+    + set_thrust(throttle_percent: double): void
+    + get_current_speed(): double
+}
+
+interface Weapon_Platform {
+    + fire_weapon(): boolean
+    + fire_weapon(salvo_count: int): boolean
+    + fire_weapon(target_id: String, lock_frequency: double): boolean
+    + reload_munitions(count: int): void
+    + get_payload_count(): int
+}
+
+interface Sublimation_Capable {
+    + upload_consciousness(pilot_neural_id: String): boolean
+    + get_neural_sync_ratio(): double
+    + is_sublimated(): boolean
+}
+
+interface Autonomous_UAV {
+    + engage_ai_autopilot(algorithm_profile: String): void
+    + is_unmanned(): boolean
+    + execute_evasive_pattern(): void
+}
+
+abstract class Combat_Aircraft {
+    # model_name: String
+    # faction: Corporate_Faction
+    # armor_integrity: double
+    # current_speed: double
+    # max_speed: double
+    # payload_count: int
+    - {static} MAX_STRUCTURAL_G: double
+    + Combat_Aircraft(model_name: String, faction: Corporate_Faction, max_speed: double, payload_count: int)
+    + set_thrust(throttle_percent: double): void
+    + execute_maneuver(g_force: double): boolean
+    + get_current_speed(): double
+    + fire_weapon(): boolean
+    + fire_weapon(salvo_count: int): boolean
+    + fire_weapon(target_id: String, lock_frequency: double): boolean
+    + reload_munitions(count: int): void
+    + get_payload_count(): int
+    + take_damage(raw_damage: double): void
+    + get_model_name(): String
+    + get_faction(): Corporate_Faction
+    + get_armor_integrity(): double
+    + get_max_speed(): double
+    + {abstract} calculate_radar_cross_section(): double
+    + {abstract} deploy_countermeasures(): void
+    + {abstract} render_tactical_hud(): void
+}
+
+class Delphinus_Series {
+    - laminar_flow_coefficient: double
+    + Delphinus_Series(model_name: String, max_speed: double, payload_count: int, laminar_flow_coefficient: double)
+    + execute_maneuver(g_force: double): boolean
+    + calculate_radar_cross_section(): double
+    + deploy_countermeasures(): void
+    + render_tactical_hud(): void
+}
+
+class Night_Raven {
+    - laser_cannon_charge_mw: double
+    - sublimated_entity_id: String
+    - neural_sync_ratio: double
+    + Night_Raven(max_speed: double, payload_count: int)
+    + fire_laser_cannon(charge_demand: double): boolean
+    + upload_consciousness(pilot_neural_id: String): boolean
+    + get_neural_sync_ratio(): double
+    + is_sublimated(): boolean
+    + calculate_radar_cross_section(): double
+    + deploy_countermeasures(): void
+    + render_tactical_hud(): void
+}
+
+class XR900_Geopelia {
+    - ai_kernel_version: String
+    - autonomous_lock: boolean
+    + XR900_Geopelia(max_speed: double, payload_count: int)
+    + engage_ai_autopilot(algorithm_profile: String): void
+    + is_unmanned(): boolean
+    + execute_evasive_pattern(): void
+    + calculate_radar_cross_section(): double
+    + deploy_countermeasures(): void
+    + render_tactical_hud(): void
+}
+
+class Su43_Berkut {
+    - canards_vectoring: boolean
+    + Su43_Berkut(faction: Corporate_Faction, max_speed: double, payload_count: int)
+    + set_canards_vectoring(active: boolean): void
+    + calculate_radar_cross_section(): double
+    + deploy_countermeasures(): void
+    + render_tactical_hud(): void
+}
+
+class Coffin_Operator {
+    - callsign: String
+    - faction: Corporate_Faction
+    - neuro_compatibility_index: double
+    - assigned_aircraft: Combat_Aircraft
+    + Coffin_Operator(callsign: String, faction: Corporate_Faction, neuro_compatibility_index: double)
+    + assign_aircraft(craft: Combat_Aircraft): void
+    + get_assigned_aircraft(): Combat_Aircraft
+    + sync_neural_link(): boolean
+    + get_callsign(): String
+    + get_faction(): Corporate_Faction
+    + get_neuro_compatibility_index(): double
+}
+
+class Corporate_Air_Fleet {
+    - fleet_codename: String
+    - faction: Corporate_Faction
+    - ready_hangar: Combat_Aircraft[]
+    - reserve_reinforcements: ArrayList<Combat_Aircraft>
+    - active_aircraft_count: int
+    - {static} DEFAULT_HANGAR_CAPACITY: int
+    + Corporate_Air_Fleet(fleet_codename: String, faction: Corporate_Faction, hangar_capacity: int)
+    + station_aircraft(craft: Combat_Aircraft): boolean
+    + reinforce_reserve(craft: Combat_Aircraft): void
+    + scramble_fleet_sorties(): void
+    + calculate_fleet_firepower(): double
+    + get_active_aircraft_count(): int
+    + get_aircraft(index: int): Combat_Aircraft
+    + get_fleet_codename(): String
+    + get_faction(): Corporate_Faction
+}
+
+' -- Relationships --
+Combat_Aircraft ..|> Flight_Control_Contract
+Combat_Aircraft ..|> Weapon_Platform
+
+Delphinus_Series --|> Combat_Aircraft
+Night_Raven --|> Combat_Aircraft
+XR900_Geopelia --|> Combat_Aircraft
+Su43_Berkut --|> Combat_Aircraft
+
+Night_Raven ..|> Sublimation_Capable
+XR900_Geopelia ..|> Autonomous_UAV
+
+Coffin_Operator o-- "0..1" Combat_Aircraft : associates (Has-A)
+Corporate_Air_Fleet *-- "0..*" Combat_Aircraft : aggregates (hangar & reserve)
+
+Combat_Aircraft --> Corporate_Faction : belongs to
+Coffin_Operator --> Corporate_Faction : contracted with
+Corporate_Air_Fleet --> Corporate_Faction : allegiance
+@enduml
